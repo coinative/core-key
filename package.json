@@ -1,16 +1,17 @@
 {
   "name": "core-key",
   "version": "0.0.0",
-  "description": "",
+  "description": "Bitcoin key implementation for NodeJS and browsers",
   "main": "lib/index.js",
   "browser": {
     "./lib/key-module.js": "./lib-browser/key-module.js"
   },
-  "author": "",
+  "author": "Ben Shepheard <ben@coinative.com>",
   "license": "MIT",
   "scripts": {
     "install": "node-gyp rebuild",
-    "test": "./node_modules/.bin/mocha -r ./test/support/env -R spec ./test && ./node_modules/.bin/karma start"
+    "test": "./node_modules/.bin/mocha -r ./test/support/env -R dot ./test && ./node_modules/.bin/karma start",
+    "test-travis": "./node_modules/.bin/mocha -r ./test/support/env -R spec ./test && ./node_modules/.bin/karma start"
   },
   "devDependencies": {
     "browserify": "^4.1.6",
@@ -27,6 +28,7 @@
   },
   "dependencies": {
     "bindings": "^1.2.0",
-    "buffer": "2.3.0"
+    "buffer": "2.3.0",
+    "core-hash": "git://github.com/coinative/core-hash"
   }
 }
