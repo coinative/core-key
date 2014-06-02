@@ -68,9 +68,26 @@ void Key::Generate()
 }
 
 int Key::VerifySignature(const unsigned char *digest, int digest_len,
-                    const unsigned char *sig, int sig_len)
+                    const unsigned char *sig_data, int sig_len)
 {
-  return ECDSA_verify(0, digest, digest_len, sig, sig_len, ec);
+  ECDSA_SIG *sig = ECDSA_SIG_new();
+  sig->r = BN_bin2bn(&sig_data[0], 32, BN_new());
+  sig->s = BN_bin2bn(&sig_data[32], 32, BN_new());
+
+  int der_size = i2d_ECDSA_SIG(sig, NULL);
+  unsigned char *der_begin, *der_end;
+  der_begin = der_end = (unsigned char *)malloc(der_size);
+
+  if (i2d_ECDSA_SIG(sig, &der_end) != der_size) {
+    return -1;
+  }
+
+  int result = ECDSA_verify(0, digest, digest_len, der_begin, der_size, ec);
+
+  free(der_begin);
+  ECDSA_SIG_free(sig);
+
+  return result;
 }
 
 void Key::EIO_VerifySignature(uv_work_t *req)

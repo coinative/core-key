@@ -54,4 +54,8 @@ KeyModule.prototype.signSync = function (hash, k) {
   return toBuffer(sig);
 };
 
+KeyModule.prototype.verifySignatureSync = function (hash, signature) {
+  return this._keypair.pub.verify(toBits(hash), toBits(signature));
+};
+
 module.exports = KeyModule;

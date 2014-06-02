@@ -28,6 +28,10 @@ describe('key', function () {
         it('generate correct signature of \'' + signature.data.substring(0, 10) + '...\' for ' + fixture.prv, function () {
           expect(key.sign(hash).toString('hex')).to.equal(signature.sig);
         });
+
+        it('verify signature of \'' + signature.data.substring(0, 10) + '...\' for ' + fixture.prv, function () {
+          expect(key.verify(hash, new Buffer(signature.sig, 'hex'))).to.be.true;
+        });
       });
     }
   });
