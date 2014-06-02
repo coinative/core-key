@@ -9,32 +9,6 @@ function toBuffer(bits) {
   return new Buffer(toBytes(bits));
 }
 
-var _0x00 = [b.partial(8, 0x00)];
-var _0x02 = [b.partial(8, 0x02)];
-var Q = new sjcl.bn('3fffffffffffffffffffffffffffffffffffffffffffffffffffffffbfffff0c');
-
-function pubToPoint(pub) {
-  var even = b.bitSlice(pub, 0, 8);
-  var xBits = b.concat(_0x00, b.bitSlice(pub, 8, 256 + 8));
-  var yBits = b.concat(_0x00, b.bitSlice(pub, 256 + 8));
-
-  var x = sjcl.bn.fromBits(xBits);
-  var y = sjcl.bn.fromBits(yBits);
-
-  // Decompress Y if necessary
-  if (y.equals(0) && curve.field.modulus.mod(new sjcl.bn(4)).equals(new sjcl.bn(3))) {
-    // y^2 = x^3 + ax^2 + b, so we need to perform sqrt to recover y
-    var ySquared = curve.b.add(x.mul(curve.a.add(x.square())));
-    var y = ySquared.powermod(Q, curve.field.modulus);
-
-    if (y.mod(2).equals(0) !== b.equal(even, _0x02)) {
-      y = curve.field.modulus.sub(y);
-    }
-  }
-  // reserialise curve here, expection is thrown when point is not on curve.
-  return ecc.curves.k256.fromBits(new ecc.point(curve, x, y).toBits());
-}
-
 function KeyModule() {
   this.private = null;
   this._public = null;
@@ -58,7 +32,7 @@ Object.defineProperty(KeyModule.prototype, 'public', {
     if (!this.private) {
       try {
         this._keypair = {
-          pub: new sjcl.ecc.ecdsa.publicKey(curve, pubToPoint(toBits(value)))
+          pub: new sjcl.ecc.ecdsa.publicKey(curve, KeyModule.pubToPoint(toBits(value)))
         };
       } catch (e) {
         throw new Error('invalid public key');
@@ -96,6 +70,32 @@ KeyModule.prototype.verifySignatureSync = function (hash, signature) {
   } catch (e) {
     return false;
   }
+};
+
+var _0x00 = [b.partial(8, 0x00)];
+var _0x02 = [b.partial(8, 0x02)];
+var Q = new sjcl.bn('3fffffffffffffffffffffffffffffffffffffffffffffffffffffffbfffff0c');
+
+KeyModule.pubToPoint = function (pub) {
+  var even = b.bitSlice(pub, 0, 8);
+  var xBits = b.concat(_0x00, b.bitSlice(pub, 8, 256 + 8));
+  var yBits = b.concat(_0x00, b.bitSlice(pub, 256 + 8));
+
+  var x = sjcl.bn.fromBits(xBits);
+  var y = sjcl.bn.fromBits(yBits);
+
+  // Decompress Y if necessary
+  if (y.equals(0) && curve.field.modulus.mod(new sjcl.bn(4)).equals(new sjcl.bn(3))) {
+    // y^2 = x^3 + ax^2 + b, so we need to perform sqrt to recover y
+    var ySquared = curve.b.add(x.mul(curve.a.add(x.square())));
+    var y = ySquared.powermod(Q, curve.field.modulus);
+
+    if (y.mod(2).equals(0) !== b.equal(even, _0x02)) {
+      y = curve.field.modulus.sub(y);
+    }
+  }
+  // reserialise curve here, expection is thrown when point is not on curve.
+  return ecc.curves.k256.fromBits(new ecc.point(curve, x, y).toBits());
 };
 
 module.exports = KeyModule;
