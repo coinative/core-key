@@ -86,7 +86,12 @@ KeyModule.prototype.signSync = function (hash, k) {
 };
 
 KeyModule.prototype.verifySignatureSync = function (hash, signature) {
-  return this._keypair.pub.verify(toBits(hash), toBits(signature));
+  // Unfortunately sjcl ecdsa verify throws an error on invalid signatures
+  try {
+    return this._keypair.pub.verify(toBits(hash), toBits(signature));
+  } catch (e) {
+    return false;
+  }
 };
 
 module.exports = KeyModule;
