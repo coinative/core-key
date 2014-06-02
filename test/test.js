@@ -5,6 +5,12 @@ var valid = require('./fixtures/valid.json');
 var invalid = require('./fixtures/invalid.json');
 
 describe('key', function () {
+  it('should throw \'invalid public key\' when the public key is not on the curve', function () {
+    expect(function () {
+      new Key({ public: new Buffer('0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81700', 'hex') });
+    }).to.throw('invalid public key');
+  });
+
   describe('from private key (valid sigs)', function () {
     valid.forEach(function (fixture) {
       var key = new Key({ private: new Buffer(fixture.prv, 'hex') });

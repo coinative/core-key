@@ -56,9 +56,13 @@ Object.defineProperty(KeyModule.prototype, 'public', {
   },
   set: function (value) {
     if (!this.private) {
-      this._keypair = {
-        pub: new sjcl.ecc.ecdsa.publicKey(curve, pubToPoint(toBits(value)))
-      };
+      try {
+        this._keypair = {
+          pub: new sjcl.ecc.ecdsa.publicKey(curve, pubToPoint(toBits(value)))
+        };
+      } catch (e) {
+        throw new Error('invalid public key');
+      }
     }
     this._public = value;
   }
