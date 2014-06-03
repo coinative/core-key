@@ -17,8 +17,7 @@ describe('key', function () {
 
       it('generate public keys for ' + fixture.prv, function () {
         expect(key.pub.toString('hex')).to.equal(fixture.pub);
-        key.compressed = false;
-        expect(key.pub.toString('hex')).to.equal(fixture.pubUncompressed);
+        expect(key.pubUncompressed.toString('hex')).to.equal(fixture.pubUncompressed);
       });
 
       if (fixture.signatures) {

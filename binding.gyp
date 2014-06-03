@@ -6,7 +6,10 @@
     {
       'target_name': 'KeyModule',
       'sources': [
-        'src/eckey.cc'
+        'src/key.cc'
+      ],
+      "include_dirs" : [
+        "<!(node -e \"require('nan')\")"
       ],
       'conditions': [
         # For Windows, require either a 32-bit or 64-bit
