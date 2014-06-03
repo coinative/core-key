@@ -8,19 +8,21 @@ var toBytes = sjcl.codec.bytes.fromBits;
 function toBuffer(bits) {
   return new Buffer(toBytes(bits));
 }
+function bn(bytes) {
+  return sjcl.bn.fromBits(toBits(bytes));
+}
 
 function KeyModule() {
-  this.private = null;
-  this._public = null;
+  this.prv = null;
+  this._pub = null;
   this.compressed = true;
 }
 
-Object.defineProperty(KeyModule.prototype, 'public', {
+Object.defineProperty(KeyModule.prototype, 'pub', {
   get: function () {
-    var pubPoint = this._keypair.pub._point;
-    var enc = toBytes(pubPoint.x.toBits());
-    var y = toBytes(pubPoint.y.toBits());
-    var even = pubPoint.y.mod(2).equals(0);
+    var enc = toBytes(this._point.x.toBits());
+    var y = toBytes(this._point.y.toBits());
+    var even = this._point.y.mod(2).equals(0);
     if (this.compressed) {
       enc = [even ? 0x02 : 0x03].concat(enc);
     } else {
@@ -31,8 +33,9 @@ Object.defineProperty(KeyModule.prototype, 'public', {
   set: function (value) {
     if (!this.private) {
       try {
+        this._point = KeyModule.pubToPoint(toBits(value));
         this._keypair = {
-          pub: new sjcl.ecc.ecdsa.publicKey(curve, KeyModule.pubToPoint(toBits(value)))
+          pub: new sjcl.ecc.ecdsa.publicKey(curve, this._point)
         };
       } catch (e) {
         throw new Error('invalid public key');
@@ -43,11 +46,12 @@ Object.defineProperty(KeyModule.prototype, 'public', {
 });
 
 KeyModule.prototype.regenerateSync = function () {
-  this._keypair = ecc.ecdsa.generateKeys(curve, 0, sjcl.bn.fromBits(toBits(this.private)));
+  this._keypair = ecc.ecdsa.generateKeys(curve, 0, bn(this.prv));
+  this._point = this._keypair.pub._point;
 };
 
 KeyModule.prototype.signSync = function (hash, k) {
-  var sig = this._keypair.sec.sign(toBits(hash), null, null, sjcl.bn.fromBits(toBits(k)));
+  var sig = this._keypair.sec.sign(toBits(hash), null, null, bn(k));
 
   var q = this._keypair.sec._curve.r.copy();
   var l = q.bitLength();
@@ -94,7 +98,7 @@ KeyModule.pubToPoint = function (pub) {
       y = curve.field.modulus.sub(y);
     }
   }
-  // reserialise curve here, expection is thrown when point is not on curve.
+  // reserialise curve here, exception is thrown when point is not on curve.
   return ecc.curves.k256.fromBits(new ecc.point(curve, x, y).toBits());
 };
 

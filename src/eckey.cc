@@ -168,9 +168,9 @@ void Key::Init(Handle<Object> target)
   s_ct->SetClassName(String::NewSymbol("Key"));
 
   // Accessors
-  s_ct->InstanceTemplate()->SetAccessor(String::New("private"),
+  s_ct->InstanceTemplate()->SetAccessor(String::New("prv"),
                                         GetPrivate, SetPrivate);
-  s_ct->InstanceTemplate()->SetAccessor(String::New("public"),
+  s_ct->InstanceTemplate()->SetAccessor(String::New("pub"),
                                         GetPublic, SetPublic);
   s_ct->InstanceTemplate()->SetAccessor(String::New("compressed"),
                                         GetCompressed, SetCompressed);

@@ -7,18 +7,18 @@ var invalid = require('./fixtures/invalid.json');
 describe('key', function () {
   it('should throw \'invalid public key\' when the public key is not on the curve', function () {
     expect(function () {
-      new Key({ public: new Buffer('0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81700', 'hex') });
+      new Key({ pub: new Buffer('0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81700', 'hex') });
     }).to.throw('invalid public key');
   });
 
   describe('from private key (valid sigs)', function () {
     valid.forEach(function (fixture) {
-      var key = new Key({ private: new Buffer(fixture.prv, 'hex') });
+      var key = new Key({ prv: new Buffer(fixture.prv, 'hex') });
 
       it('generate public keys for ' + fixture.prv, function () {
-        expect(key.public.toString('hex')).to.equal(fixture.pub);
+        expect(key.pub.toString('hex')).to.equal(fixture.pub);
         key.compressed = false;
-        expect(key.public.toString('hex')).to.equal(fixture.pubUncompressed);
+        expect(key.pub.toString('hex')).to.equal(fixture.pubUncompressed);
       });
 
       if (fixture.signatures) {
@@ -43,7 +43,7 @@ describe('key', function () {
 
   describe('from private key (invalid sigs)', function () {
     invalid.forEach(function (fixture) {
-      var key = new Key({ private: new Buffer(fixture.prv, 'hex') });
+      var key = new Key({ prv: new Buffer(fixture.prv, 'hex') });
 
       if (fixture.signatures) {
         fixture.signatures.forEach(function (signature, i) {
@@ -69,7 +69,7 @@ describe('key', function () {
 
   describe('from public key (compressed, valid sigs)', function () {
     valid.forEach(function (fixture) {
-      var key = new Key({ public: new Buffer(fixture.pub, 'hex') });
+      var key = new Key({ pub: new Buffer(fixture.pub, 'hex') });
 
       if (fixture.signatures) {
         fixture.signatures.forEach(function (signature, i) {
@@ -85,7 +85,7 @@ describe('key', function () {
 
   describe('from public key (compressed, invalid sigs)', function () {
     invalid.forEach(function (fixture) {
-      var key = new Key({ public: new Buffer(fixture.pub, 'hex') });
+      var key = new Key({ pub: new Buffer(fixture.pub, 'hex') });
 
       if (fixture.signatures) {
         fixture.signatures.forEach(function (signature, i) {
@@ -101,7 +101,7 @@ describe('key', function () {
 
   describe('from public key (uncompressed, valid sigs)', function () {
     valid.forEach(function (fixture) {
-      var key = new Key({ public: new Buffer(fixture.pubUncompressed, 'hex') });
+      var key = new Key({ pub: new Buffer(fixture.pubUncompressed, 'hex') });
 
       if (fixture.signatures) {
         fixture.signatures.forEach(function (signature, i) {
@@ -117,7 +117,7 @@ describe('key', function () {
 
   describe('from public key (uncompressed, invalid sigs)', function () {
     invalid.forEach(function (fixture) {
-      var key = new Key({ public: new Buffer(fixture.pubUncompressed, 'hex') });
+      var key = new Key({ pub: new Buffer(fixture.pubUncompressed, 'hex') });
 
       if (fixture.signatures) {
         fixture.signatures.forEach(function (signature, i) {
