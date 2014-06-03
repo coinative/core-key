@@ -23,7 +23,7 @@ Key::~Key() {
 }
 
 void
-Key::Initialize(Handle<Object> target) {
+Key::Init() {
   NanScope();
 
   Local<FunctionTemplate> ctor = NanNew<FunctionTemplate>(New);
@@ -39,8 +39,6 @@ Key::Initialize(Handle<Object> target) {
   proto->SetAccessor(NanNew("prv"), GetPrv, SetPrv);
   proto->SetAccessor(NanNew("pub"), GetPub, SetPub);
   proto->SetAccessor(NanNew("pubUncompressed"), GetPubUncompressed, SetPub);
-
-  target->Set(NanNew("Key"), ctor->GetFunction());
 }
 
 NAN_METHOD(Key::New) {
@@ -302,8 +300,9 @@ NAN_METHOD(Key::Verify) {
 }
 
 extern "C" void
-init (Handle<Object> target) {
-  Key::Initialize(target);
+init (Handle<Object> exports, Handle<Object> module) {
+  Key::Init();
+  module->Set(NanNew("exports"), Key::constructor->GetFunction());
 }
 
 NODE_MODULE(KeyModule, init)

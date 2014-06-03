@@ -10,7 +10,7 @@ using namespace node;
 class Key : ObjectWrap {
   public:
     static Persistent<FunctionTemplate> constructor;
-    static void Initialize(Handle<Object> target);
+    static void Init();
 
     static NAN_METHOD(New);
 
