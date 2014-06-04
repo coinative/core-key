@@ -15,28 +15,34 @@ describe('key', function () {
     valid.forEach(function (fixture) {
       var key = new Key({ prv: new Buffer(fixture.prv, 'hex') });
 
-      it('generate public keys for ' + fixture.prv, function () {
-        expect(key.pub.toString('hex')).to.equal(fixture.pub);
-        expect(key.pubUncompressed.toString('hex')).to.equal(fixture.pubUncompressed);
-      });
-
-      if (fixture.signatures) {
-        fixture.signatures.forEach(function (signature, i) {
-          var hash = sha256(signature.data);
-
-          it('generate correct k #' + i + ' for ' + fixture.prv, function () {
-            expect(Key.generateK(new Buffer(fixture.prv, 'hex'), hash).toString('hex')).to.equal(signature.k);
-          });
-
-          it('generate correct signature of \'' + signature.data.substring(0, 10) + '...\' for ' + fixture.prv, function () {
-            expect(key.sign(hash).toString('hex')).to.equal(signature.sig);
-          });
-
-          it('verify signature of \'' + signature.data.substring(0, 10) + '...\' for ' + fixture.prv, function () {
-            expect(key.verify(hash, new Buffer(signature.sig, 'hex'))).to.be.true;
-          });
+      describe('private key: ' + fixture.prv, function () {
+        it('generate public keys', function () {
+          expect(key.pub.toString('hex')).to.equal(fixture.pub);
+          expect(key.pubUncompressed.toString('hex')).to.equal(fixture.pubUncompressed);
         });
-      }
+
+        it('generate correct address', function () {
+          expect(key.getAddress().toString()).to.equal(fixture.address);
+        });
+
+        if (fixture.signatures) {
+          fixture.signatures.forEach(function (signature, i) {
+            var hash = sha256(signature.data);
+
+            it('generate correct k #' + i, function () {
+              expect(Key.generateK(new Buffer(fixture.prv, 'hex'), hash).toString('hex')).to.equal(signature.k);
+            });
+
+            it('generate correct signature of \'' + signature.data.substring(0, 10) + '...\'', function () {
+              expect(key.sign(hash).toString('hex')).to.equal(signature.sig);
+            });
+
+            it('verify signature of \'' + signature.data.substring(0, 10) + '...\'', function () {
+              expect(key.verify(hash, new Buffer(signature.sig, 'hex'))).to.be.true;
+            });
+          });
+        }
+      });
     });
   });
 

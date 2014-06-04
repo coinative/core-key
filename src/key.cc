@@ -183,7 +183,6 @@ NAN_METHOD(Key::Sign) {
     k = BN_bin2bn(k_data, k_len, NULL);
   }
 
-
   // Create signature
   BN_CTX *ctx = BN_CTX_new();
   BIGNUM *kinv = NULL, *rp = NULL,  *X = NULL,
