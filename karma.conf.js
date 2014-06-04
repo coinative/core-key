@@ -45,6 +45,9 @@ module.exports = function(config) {
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
     browsers: ['PhantomJS'],
 
+    // travis can run slow so we increase this from the default of 10s
+    browserNoActivityTimeout: 20000,
+
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
     singleRun: true
