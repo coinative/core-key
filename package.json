@@ -29,9 +29,9 @@
   "dependencies": {
     "bindings": "^1.2.0",
     "buffer": "2.3.0",
-    "satoshi-address": "git://github.com/coinative/satoshi-address",
-    "satoshi-hash": "git://github.com/coinative/satoshi-hash",
-    "satoshi-sjcl": "git://github.com/coinative/satoshi-sjcl",
+    "satoshi-address": "0.0.1",
+    "satoshi-hash": "0.0.1",
+    "satoshi-sjcl": "0.0.2",
     "nan": "^1.1.2"
   }
 }
