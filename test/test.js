@@ -1,5 +1,5 @@
 var Key = require('../');
-var sha256 = require('core-hash').sha256;
+var sha256 = require('satoshi-hash').sha256;
 
 var valid = require('./fixtures/valid.json');
 var invalid = require('./fixtures/invalid.json');

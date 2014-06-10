@@ -1,6 +1,6 @@
-# @coinative/core-key
+# @coinative/satoshi-key
 
-[![Build Status](https://travis-ci.org/coinative/core-key.svg?branch=master)](https://travis-ci.org/coinative/core-key)
+[![Build Status](https://travis-ci.org/coinative/satoshi-key.svg?branch=master)](https://travis-ci.org/coinative/satoshi-key)
 
 Bitcoin key implementation for NodeJS and browsers.
 
@@ -9,7 +9,7 @@ Bitcoin key implementation for NodeJS and browsers.
 Not currently hosted on npmjs.org. Take this module as a git dependency via:
 
 ```
-npm install coinative/core-key
+npm install coinative/satoshi-key
 ```
 
 ## License

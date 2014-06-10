@@ -1,5 +1,5 @@
 var assert = require('assert');
-var sjcl = require('core-sjcl');
+var sjcl = require('satoshi-sjcl');
 var b = sjcl.bitArray;
 var ecc = sjcl.ecc;
 var curve = ecc.curves.k256;
